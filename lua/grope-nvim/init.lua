@@ -6,6 +6,10 @@ local config = {
 		context_before = 5,   -- Number of context lines to show before the matching line
 		context_after = 5,		-- Number of context lines to show after the matching line
 		context_width = 0.5, 	-- Context width size
+		keys = {
+			open_context = "l",
+			close_context = "q"
+		}
 	},
 
 	-- Options for the general window
@@ -114,7 +118,7 @@ function M.live_grep()
 		end
 	end, { buffer = float_buf })
 
-	vim.keymap.set("n", "l", function()
+	vim.keymap.set("n", config.context_window.keys.open_context, function()
 		local row = vim.api.nvim_win_get_cursor(float_win)[1]
 		if row < 1 then return end
 
@@ -169,7 +173,7 @@ function M.live_grep()
 			end
 		end
 		vim.keymap.set("n", "<Esc>", close_fn, { buffer = buf, noremap = true, silent = true })
-		vim.keymap.set("n", "q", close_fn, { buffer = buf, noremap = true, silent = true })
+		vim.keymap.set("n", config.context_window.keys.close_context, close_fn, { buffer = buf, noremap = true, silent = true })
 	end, { buffer = float_buf })
 end
 
