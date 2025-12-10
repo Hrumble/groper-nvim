@@ -1,6 +1,5 @@
 local M = {}
 
--- setup table with defaults
 local config = {
 	context_before = 5,
 	context_after = 5,
@@ -50,18 +49,16 @@ local function create_float()
 	return buf, win
 end
 
--- ...[clone_extmarks, attach_cursor_highlight, grep unchanged]...
-
--- LIVE GREP ADDITIONS WITH SYNTAX HIGHLIGHTING
+-- Live grepping with syntax highlighting
 function M.live_grep()
 	local src_buf = vim.api.nvim_get_current_buf()
 	local src_ft = vim.api.nvim_buf_get_option(src_buf, 'filetype')
 	local all_lines = vim.api.nvim_buf_get_lines(src_buf, 0, -1, false)
 
 	local float_buf, float_win = create_float()
-	vim.api.nvim_buf_set_option(float_buf, "modifiable", true)
+	vim.api.nvim_set_option_value("modifiable", true, { buf = float_buf })
 	-- set filetype same as source for syntax highlighting
-	vim.api.nvim_buf_set_option(float_buf, 'filetype', src_ft)
+	vim.api.nvim_set_option_value('filetype', src_ft, { buf = float_buf })
 
 	-- first line reserved for input
 	vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, { "" })
@@ -76,7 +73,7 @@ function M.live_grep()
 		local cur = vim.api.nvim_win_get_cursor(float_win)
 
 		-- clear old results, starting from line 1 (leave input line)
-		vim.api.nvim_buf_set_option(float_buf, "modifiable", true)
+		vim.api.nvim_set_option_value("modifiable", true, { buf = float_buf })
 		vim.api.nvim_buf_set_lines(float_buf, 1, -1, false, {})
 
 		local out = {}
@@ -88,7 +85,7 @@ function M.live_grep()
 
 		vim.api.nvim_buf_set_lines(float_buf, 1, -1, false, out)
 		-- keep input line modifiable
-		vim.api.nvim_buf_set_option(float_buf, "modifiable", true)
+		vim.api.nvim_set_option_value("modifiable", true, { buf = float_buf })
 
 		-- restore cursor so typing continues
 		vim.api.nvim_win_set_cursor(float_win, cur)
@@ -136,10 +133,10 @@ function M.live_grep()
 
 		local buf = vim.api.nvim_create_buf(false, true)
 		vim.api.nvim_buf_set_lines(buf, 0, -1, false, lines)
-		vim.api.nvim_buf_set_option(buf, 'buftype', 'nofile')
-		vim.api.nvim_buf_set_option(buf, 'bufhidden', 'wipe')
-		vim.api.nvim_buf_set_option(buf, 'modifiable', false)
-		vim.api.nvim_buf_set_option(buf, 'filetype', vim.api.nvim_buf_get_option(src_buf, 'filetype'))
+		vim.api.nvim_set_option_value('buftype', 'nofile', { buf = buf })
+		vim.api.nvim_set_option_value('bufhidden', 'wipe', { buf = buf })
+		vim.api.nvim_set_option_value('modifiable', false, { buf = buf })
+		vim.api.nvim_set_option_value('filetype', vim.api.nvim_get_option_value('filetype', { buf = buf }), { buf = buf })
 
 		local width = math.floor(vim.o.columns * config.context_width)
 		local height = #lines
