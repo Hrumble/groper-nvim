@@ -16,6 +16,9 @@ local config = {
 	window = {
 		float_width = 0.7,  	-- Window Width size
 		float_height = 0.6, 	-- Window Height size
+		keys = {
+			goto = "<CR>"
+		}
 	}
 }
 
@@ -100,7 +103,7 @@ function M.live_grep()
 		callback = update_results,
 	})
 
-	vim.keymap.set("n", "<CR>", function()
+	vim.keymap.set("n", config.window.keys.goto, function()
 		local row = vim.api.nvim_win_get_cursor(float_win)[1]
 		if row < 1 then return end
 		local text = vim.api.nvim_buf_get_lines(float_buf, row - 1, row, false)[1]
