@@ -1,6 +1,6 @@
 local M = {}
 
-local config = require("groper.config")
+local config = require("grope-nvim.config")
 local window = require("window")
 
 function M.setup(opts)
