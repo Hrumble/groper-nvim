@@ -1,6 +1,6 @@
 local M = {}
 
-local config = require("config")
+local config = require("groper.config")
 local window = require("window")
 
 function M.setup(opts)
