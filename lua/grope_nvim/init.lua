@@ -1,7 +1,7 @@
 local M = {}
 
 local config = require("grope_nvim.config")
-local window = require("window")
+local window = require("grope_nvim.window")
 
 function M.setup(opts)
 	if opts then
